@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ClaveIA — Webs y bots de WhatsApp para negocios con agenda</title>
+<meta name="description" content="Webs rápidas y automatización de WhatsApp para negocios que viven de turnos y consultas. La primera respuesta llega al instante, a cualquier hora. Entrega con fecha por escrito.">
+<meta property="og:title" content="ClaveIA — El cliente que escribe a las 21:40 no espera a mañana.">
+<meta property="og:description" content="Webs rápidas y bots de WhatsApp para negocios con agenda. Fecha de entrega por escrito o devolución de la seña.">
+<meta property="og:type" content="website">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23060C18'/%3E%3Ctext x='32' y='44' font-family='Georgia,serif' font-size='36' fill='%2345D6E8' text-anchor='middle'%3EC%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Young+Serif&family=Schibsted+Grotesk:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Spline+Sans+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --noche:#060C18;
+  --noche-2:#0D1930;
+  --dia:#F2F6FC;
+  --panel:#FBFCFF;
+  --tinta:#101A2B;
+  --tinta-suave:#46536C;
+  --azul:#2456D6;
+  --azul-osc:#1B41A8;
+  --cian:#45D6E8;
+  --violeta:#7A5CFF;
+  --grad:linear-gradient(135deg,#45D6E8,#3D7BFA 55%,#7A5CFF);
+  --claro:#E8EEF9;
+  --burb-in:#1C2A40;
+  --burb-out:#005C4B;
+  --chat-texto:#E7ECF2;
+  --chat-hora:#8A9AB4;
+  --borde:rgba(16,26,43,.14);
+  --radio:16px;
+  --ancho:1080px;
+  --serif:'Young Serif', Georgia, serif;
+  --sans:'Schibsted Grotesk', 'Helvetica Neue', Arial, sans-serif;
+  --mono:'Spline Sans Mono', 'Courier New', monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:var(--sans);color:var(--tinta);background:var(--dia);font-size:17px;line-height:1.6;-webkit-font-smoothing:antialiased}
+::selection{background:var(--azul);color:#fff}
+img{max-width:100%}
+a{color:inherit}
+
+/* ---------- utilidades ---------- */
+.wrap{max-width:var(--ancho);margin:0 auto;padding:0 24px}
+.eyebrow{font-family:var(--mono);font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--azul);display:block;margin-bottom:14px}
+.night .eyebrow{color:var(--cian)}
+h1,h2{font-family:var(--serif);font-weight:400;line-height:1.08;letter-spacing:-.01em}
+h2{font-size:clamp(1.7rem,3.6vw,2.5rem);margin-bottom:16px;max-width:22ch}
+.section{padding:88px 0}
+.section-head{margin-bottom:44px}
+.lead{color:var(--tinta-suave);max-width:58ch}
+.night{background:var(--noche);color:var(--claro)}
+.night .lead{color:#AEC0BC}
+
+/* ---------- botones ---------- */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:9px;font-family:var(--sans);font-weight:600;font-size:1rem;text-decoration:none;padding:14px 26px;border-radius:12px;border:1px solid transparent;transition:transform .15s ease, filter .15s ease, border-color .15s ease;cursor:pointer}
+.btn svg{width:18px;height:18px;flex-shrink:0}
+.btn:active{transform:translateY(1px)}
+.btn-primario{background-image:var(--grad);color:#fff;border:none}
+.btn-primario:hover{filter:brightness(1.12)}
+.btn-secundario{background:transparent;color:inherit;border-color:var(--borde)}
+.night .btn-secundario{border-color:rgba(233,239,234,.25)}
+.btn-secundario:hover{border-color:currentColor}
+a:focus-visible,button:focus-visible,summary:focus-visible{outline:3px solid var(--cian);outline-offset:3px;border-radius:6px}
+
+/* ---------- header ---------- */
+header{position:absolute;top:0;left:0;right:0;z-index:10}
+.nav{display:flex;align-items:center;justify-content:space-between;padding:22px 0}
+.logo{font-family:var(--serif);font-size:1.35rem;text-decoration:none;color:var(--claro);letter-spacing:.01em}
+.logo .ia{background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+.nav .btn{padding:10px 18px;font-size:.92rem}
+
+/* ---------- hero ---------- */
+.hero{position:relative;padding:150px 0 96px;overflow:hidden}
+.hero::before{content:"";position:absolute;inset:0;background:radial-gradient(720px 540px at 78% 38%, rgba(61,123,250,.16), transparent 65%);pointer-events:none}
+.hero::after{content:"";position:absolute;inset:0;background-image:radial-gradient(2px 2px at 18% 28%, rgba(69,214,232,.55), transparent),radial-gradient(1.5px 1.5px at 71% 16%, rgba(122,92,255,.5), transparent),radial-gradient(2px 2px at 86% 58%, rgba(69,214,232,.35), transparent),radial-gradient(1.5px 1.5px at 9% 72%, rgba(61,123,250,.45), transparent),radial-gradient(1.5px 1.5px at 44% 9%, rgba(69,214,232,.35), transparent);pointer-events:none}
+.hero .wrap{position:relative;display:grid;grid-template-columns:1.05fr .95fr;gap:56px;align-items:center}
+.hero h1{font-size:clamp(2.3rem,5.2vw,3.9rem);max-width:15ch;margin-bottom:22px}
+.hero h1 .hora{color:var(--cian);white-space:nowrap}
+.hero p{margin-bottom:32px}
+.hero-ctas{display:flex;gap:14px;flex-wrap:wrap}
+.reloj{font-family:var(--mono);font-size:.78rem;letter-spacing:.06em;color:var(--chat-hora);margin-top:26px}
+.reloj strong{color:var(--cian);font-weight:500}
+
+/* ---------- teléfono / chat ---------- */
+.telefono{background:#0A1518;border:1px solid rgba(233,239,234,.10);border-radius:26px;padding:10px;max-width:400px;margin-left:auto;box-shadow:0 30px 70px rgba(0,0,0,.45)}
+.chat-cabecera{display:flex;align-items:center;gap:12px;padding:12px 14px;background:var(--noche-2);border-radius:18px 18px 0 0}
+.avatar{width:38px;height:38px;border-radius:50%;background-image:var(--grad);color:#fff;display:flex;align-items:center;justify-content:center;font-family:var(--serif);font-size:1.05rem;flex-shrink:0}
+.chat-nombre{font-weight:600;font-size:.95rem;color:var(--chat-texto);line-height:1.2}
+.chat-estado{font-size:.74rem;color:var(--cian)}
+.chat{background:#0D1B1F;border-radius:0 0 18px 18px;padding:16px 12px 14px;display:flex;flex-direction:column;gap:9px}
+.msg{max-width:82%;padding:9px 12px 7px;border-radius:12px;font-size:.9rem;line-height:1.45;color:var(--chat-texto);position:relative;opacity:0;transform:translateY(8px);animation:aparecer .4s ease forwards;animation-delay:calc(var(--i) * .5s + .5s)}
+.msg .meta{display:block;text-align:right;font-family:var(--mono);font-size:.62rem;color:var(--chat-hora);margin-top:4px}
+.msg-in{align-self:flex-start;background:var(--burb-in);border-bottom-left-radius:4px}
+.msg-out{align-self:flex-end;background:var(--burb-out);border-bottom-right-radius:4px}
+.msg-out .meta .check{color:#53BDEB;letter-spacing:-.12em;margin-left:5px}
+.divisor-chat{align-self:center;font-family:var(--mono);font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;color:var(--chat-hora);background:rgba(233,239,234,.06);padding:5px 12px;border-radius:20px;margin:8px 0;opacity:0;animation:aparecer .4s ease forwards;animation-delay:calc(var(--i) * .5s + .5s)}
+.chip-captura{align-self:center;font-family:var(--mono);font-size:.66rem;letter-spacing:.1em;color:#071427;background:var(--cian);padding:6px 14px;border-radius:20px;margin-top:6px;opacity:0;animation:aparecer .4s ease forwards;animation-delay:calc(var(--i) * .5s + .5s)}
+.typing{align-self:flex-end;background:var(--burb-out);border-radius:12px;border-bottom-right-radius:4px;padding:12px 14px;display:flex;gap:4px;opacity:0;animation:tipeo 1.1s ease forwards;animation-delay:calc(var(--i) * .5s + .5s)}
+.typing i{width:6px;height:6px;border-radius:50%;background:rgba(231,236,234,.75);animation:punto 1s infinite ease-in-out}
+.typing i:nth-child(2){animation-delay:.15s}
+.typing i:nth-child(3){animation-delay:.3s}
+@keyframes aparecer{to{opacity:1;transform:translateY(0)}}
+@keyframes tipeo{0%{opacity:0}15%{opacity:1}85%{opacity:1}100%{opacity:0;height:0;padding:0;margin:0;overflow:hidden}}
+@keyframes punto{0%,100%{opacity:.3}50%{opacity:1}}
+
+/* ---------- puente noche → día ---------- */
+.amanecer{height:120px;background:linear-gradient(to bottom, var(--noche), var(--dia))}
+
+/* ---------- la fuga ---------- */
+.fugas{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+.fuga{background:var(--panel);border:1px solid var(--borde);border-radius:var(--radio);padding:30px 28px}
+.fuga h3{font-family:var(--sans);font-weight:700;font-size:1.1rem;margin-bottom:10px}
+.fuga p{color:var(--tinta-suave);font-size:.98rem}
+
+/* ---------- servicios ---------- */
+.planes{display:grid;grid-template-columns:1fr 1fr;gap:24px;align-items:stretch}
+.plan{background:var(--panel);border:1px solid var(--borde);border-radius:var(--radio);padding:34px 30px;display:flex;flex-direction:column}
+.plan-destacado{border-color:var(--azul);box-shadow:0 14px 44px rgba(61,123,250,.16)}
+.plan .tag{font-family:var(--mono);font-size:.68rem;letter-spacing:.13em;text-transform:uppercase;color:var(--azul);border:1px solid currentColor;border-radius:20px;padding:5px 12px;align-self:flex-start;margin-bottom:18px}
+.plan h3{font-family:var(--serif);font-weight:400;font-size:1.55rem;margin-bottom:10px}
+.plan .desc{color:var(--tinta-suave);font-size:.98rem;margin-bottom:22px}
+.plan ul{list-style:none;margin-bottom:26px;flex-grow:1}
+.plan li{padding:9px 0 9px 40px;position:relative;font-size:.97rem;border-top:1px solid var(--borde)}
+.plan li::before{content:"✓";position:absolute;left:2px;top:9px;font-family:var(--mono);font-size:.8rem;color:var(--azul);font-weight:500}
+.plan-destacado li::before{content:"✓✓";letter-spacing:-.14em}
+.plan .precio{font-family:var(--mono);font-size:.76rem;letter-spacing:.06em;color:var(--tinta-suave)}
+.nota-planes{margin-top:26px;font-size:.92rem;color:var(--tinta-suave);max-width:64ch}
+
+/* ---------- garantía ---------- */
+.garantia-card{background:var(--noche);color:var(--claro);border-radius:20px;padding:56px 48px;position:relative;overflow:hidden}
+.garantia-card::before{content:"";position:absolute;inset:0;background:radial-gradient(500px 300px at 85% 15%, rgba(69,214,232,.12), transparent 70%);pointer-events:none}
+.garantia-card h2{max-width:18ch}
+.garantia-card p{color:#AEC0BC;max-width:56ch;margin-bottom:18px}
+.garantia-card .letra{font-family:var(--mono);font-size:.76rem;letter-spacing:.06em;color:var(--cian)}
+
+/* ---------- proceso ---------- */
+.pasos{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;counter-reset:paso}
+.paso{border-top:2px solid var(--tinta);padding-top:18px}
+.paso::before{counter-increment:paso;content:"0" counter(paso);font-family:var(--mono);font-size:.8rem;letter-spacing:.1em;color:var(--azul);display:block;margin-bottom:10px}
+.paso h3{font-family:var(--sans);font-weight:700;font-size:1.03rem;margin-bottom:8px}
+.paso p{font-size:.92rem;color:var(--tinta-suave)}
+
+/* ---------- faq ---------- */
+.faq{max-width:760px}
+.faq details{border-top:1px solid var(--borde)}
+.faq details:last-of-type{border-bottom:1px solid var(--borde)}
+.faq summary{list-style:none;cursor:pointer;padding:20px 44px 20px 0;font-weight:600;font-size:1.02rem;position:relative}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary::after{content:"+";position:absolute;right:6px;top:50%;transform:translateY(-50%);font-family:var(--mono);font-size:1.3rem;color:var(--azul);transition:transform .2s ease}
+.faq details[open] summary::after{transform:translateY(-50%) rotate(45deg)}
+.faq details p{padding:0 0 22px;color:var(--tinta-suave);max-width:62ch}
+
+/* ---------- cierre ---------- */
+.cierre{position:relative;overflow:hidden}
+.cierre::before{content:"";position:absolute;inset:0;background:radial-gradient(640px 420px at 50% 110%, rgba(122,92,255,.16), transparent 70%);pointer-events:none}
+.cierre .wrap{position:relative;text-align:center;display:flex;flex-direction:column;align-items:center}
+.cierre h2{max-width:24ch;margin-left:auto;margin-right:auto}
+.cierre .lead{margin:0 auto 34px}
+.cierre .respuesta{font-family:var(--mono);font-size:.76rem;letter-spacing:.08em;color:var(--chat-hora);margin-top:18px}
+
+/* ---------- footer ---------- */
+footer{background:var(--noche);color:#AEC0BC;padding:44px 0 90px;border-top:1px solid rgba(233,239,234,.09)}
+.footer-fila{display:flex;justify-content:space-between;gap:30px;flex-wrap:wrap;align-items:flex-start}
+footer .logo{font-size:1.15rem}
+.footer-desc{font-size:.9rem;max-width:34ch;margin-top:10px}
+.footer-links{display:flex;flex-direction:column;gap:8px;font-size:.9rem}
+.footer-links a{text-decoration:none;color:#AEC0BC}
+.footer-links a:hover{color:var(--cian)}
+.copy{font-family:var(--mono);font-size:.7rem;letter-spacing:.06em;margin-top:34px;color:#5F7570}
+
+/* ---------- aviso cookies ---------- */
+.aviso-cookies{position:fixed;bottom:18px;left:18px;right:18px;max-width:430px;background:var(--panel);border:1px solid var(--borde);border-radius:var(--radio);padding:20px 22px;box-shadow:0 18px 50px rgba(6,12,24,.35);z-index:50;display:none}
+.aviso-cookies.visible{display:block}
+.aviso-cookies p{font-size:.86rem;color:var(--tinta-suave);margin-bottom:14px}
+.aviso-cookies a{color:var(--azul)}
+.aviso-cookies .btn{padding:9px 18px;font-size:.88rem}
+
+/* ---------- reveal ---------- */
+.reveal{opacity:0;transform:translateY(16px);transition:opacity .5s ease, transform .5s ease}
+.reveal.visto{opacity:1;transform:none}
+
+/* ---------- responsive ---------- */
+@media (max-width:900px){
+  .hero .wrap{grid-template-columns:1fr;gap:44px}
+  .telefono{margin:0 auto}
+  .fugas,.planes{grid-template-columns:1fr}
+  .pasos{grid-template-columns:1fr 1fr;gap:28px}
+  .caso{grid-template-columns:1fr;gap:10px}
+  .garantia-card{padding:40px 28px}
+  .section{padding:64px 0}
+  .hero{padding:120px 0 72px}
+}
+@media (max-width:520px){
+  .pasos{grid-template-columns:1fr}
+  .hero-ctas .btn{width:100%;text-align:center}
+}
+@media (prefers-reduced-motion: reduce){
+  html{scroll-behavior:auto}
+  .msg,.divisor-chat,.chip-captura{animation:none;opacity:1;transform:none}
+  .typing{display:none}
+  .reveal{opacity:1;transform:none;transition:none}
+}
+</style>
+</head>
+<body>
+
+<svg xmlns="http://www.w3.org/2000/svg" style="position:absolute;width:0;height:0" aria-hidden="true">
+  <symbol id="ico-wa" viewBox="0 0 24 24"><path fill="currentColor" d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></symbol>
+</svg>
+
+<header>
+  <div class="wrap nav">
+    <a class="logo" href="#">Clave<span class="ia">IA</span></a>
+    <a class="btn btn-primario" href="https://wa.me/5491135780065?text=Hola%2C%20quiero%20el%20diagn%C3%B3stico%20AGENDA"><svg aria-hidden="true"><use href="#ico-wa"/></svg>Escribir</a>
+  </div>
+</header>
+
+<!-- ============ HERO (noche) ============ -->
+<section class="hero night">
+  <div class="wrap">
+    <div>
+      <span class="eyebrow">Webs y automatización de WhatsApp</span>
+      <h1>El cliente que escribe a las <span class="hora">21:40</span> no espera a mañana.</h1>
+      <p class="lead">Webs rápidas y un bot de WhatsApp para negocios que viven de turnos, presupuestos y consultas. La primera respuesta llega al instante, a cualquier hora. El cierre queda en manos de una persona.</p>
+      <div class="hero-ctas">
+        <a class="btn btn-primario" href="https://wa.me/5491135780065?text=Hola%2C%20quiero%20el%20diagn%C3%B3stico%20AGENDA"><svg aria-hidden="true"><use href="#ico-wa"/></svg>Pedir diagnóstico gratis</a>
+        <a class="btn btn-secundario" href="#servicios">Ver cómo trabajo</a>
+      </div>
+      <p class="reloj" id="reloj">Ahora mismo, ¿quién responde los mensajes del negocio?</p>
+    </div>
+
+    <div class="telefono" aria-label="Ejemplo de conversación de WhatsApp: la misma consulta, sin respuesta y con respuesta automática">
+      <div class="chat-cabecera">
+        <div class="avatar">T</div>
+        <div>
+          <div class="chat-nombre">Tu negocio</div>
+          <div class="chat-estado">en línea</div>
+        </div>
+      </div>
+      <div class="chat">
+        <div class="msg msg-in" style="--i:0">Hola, ¿tienen turno esta semana? ¿Qué precio tiene una limpieza?<span class="meta">21:40</span></div>
+        <div class="msg msg-in" style="--i:1">¿Están?<span class="meta">21:58</span></div>
+        <div class="msg msg-out" style="--i:2">Hola, sí tenemos. ¿Le queda bien el jueves?<span class="meta">09:14 <span class="check">✓✓</span></span></div>
+        <div class="msg msg-in" style="--i:3">Gracias, ya reservé en otro lado.<span class="meta">09:31</span></div>
+
+        <div class="divisor-chat" style="--i:4">El mismo mensaje, con Plan Agenda</div>
+
+        <div class="msg msg-in" style="--i:5">Hola, ¿tienen turno esta semana?<span class="meta">21:40</span></div>
+        <div class="typing" style="--i:6" aria-hidden="true"><i></i><i></i><i></i></div>
+        <div class="msg msg-out" style="--i:8">Hola, sí quedan turnos esta semana. Para reservar solo necesito un nombre y un teléfono de contacto.<span class="meta">21:40 <span class="check">✓✓</span></span></div>
+        <div class="msg msg-in" style="--i:9">Ana Suárez, 600 123 456<span class="meta">21:41</span></div>
+        <div class="msg msg-out" style="--i:10">Listo, Ana. Mañana a primera hora confirmamos el horario. Gracias por escribir.<span class="meta">21:41 <span class="check">✓✓</span></span></div>
+        <div class="chip-captura" style="--i:11">Contacto capturado — 21:41</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="amanecer" aria-hidden="true"></div>
+
+<!-- ============ LA FUGA ============ -->
+<section class="section" id="fuga">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <span class="eyebrow">La fuga</span>
+      <h2>Los clientes no se pierden de golpe. Se gotean.</h2>
+    </div>
+    <div class="fugas">
+      <div class="fuga reveal">
+        <h3>La web no convence</h3>
+        <p>Carga lenta, información vieja, ningún botón claro para escribir. El visitante duda, cierra la pestaña y sigue buscando. Nadie avisa de esa venta perdida: simplemente no pasa.</p>
+      </div>
+      <div class="fuga reveal">
+        <h3>Nadie responde fuera de hora</h3>
+        <p>Las consultas de la noche y del fin de semana esperan a mañana. El cliente no: escribe a dos o tres lugares y cierra con el primero que contesta.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SERVICIOS ============ -->
+<section class="section" id="servicios">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <span class="eyebrow">Servicios</span>
+      <h2>Dos piezas, un objetivo: que ningún mensaje se pierda.</h2>
+    </div>
+    <div class="planes">
+      <div class="plan reveal">
+        <span class="tag">Proyecto inicial · pago único</span>
+        <h3>La base</h3>
+        <p class="desc">Una web que genera confianza y lleva cada visita a una conversación de WhatsApp.</p>
+        <ul>
+          <li>Web a medida, con carga en menos de 2 segundos</li>
+          <li>Un botón por servicio, con el mensaje de WhatsApp ya escrito</li>
+          <li>Ficha de Google y SEO local para aparecer en la zona</li>
+          <li>Kit legal completo: aviso legal, privacidad y cookies</li>
+          <li>Entrega en 14 días, con fecha comprometida por escrito</li>
+        </ul>
+        <span class="precio">Precio cerrado en la propuesta</span>
+      </div>
+      <div class="plan plan-destacado reveal">
+        <span class="tag">Plan Agenda · mensual</span>
+        <h3>La guardia</h3>
+        <p class="desc">Un bot que atiende cuando el negocio está cerrado, y una web que nunca queda desactualizada.</p>
+        <ul>
+          <li>Bot de WhatsApp que responde al instante, las 24 horas</li>
+          <li>Captura nombre, motivo y teléfono, y deja el contacto listo para cerrar</li>
+          <li>Recordatorios de turno para bajar el ausentismo</li>
+          <li>Actualización de contenidos: precios, servicios, fotos</li>
+          <li>Reporte mensual de consultas y mantenimiento incluido</li>
+        </ul>
+        <span class="precio">Precio cerrado en la propuesta</span>
+      </div>
+    </div>
+    <p class="nota-planes">El Plan Agenda se suma al proyecto inicial o a una web existente, después de una auditoría corta para asegurar que la base aguante.</p>
+  </div>
+</section>
+
+<!-- ============ GARANTÍA ============ -->
+<section class="section" id="garantia">
+  <div class="wrap">
+    <div class="garantia-card night reveal">
+      <span class="eyebrow">Garantía</span>
+      <h2>Fecha por escrito o devuelvo la seña.</h2>
+      <p>Cada propuesta lleva una fecha de entrega firmada. Si no la cumplo, la seña vuelve completa. Y mientras el Plan Agenda esté activo, cualquier reparación de la web corre por mi cuenta.</p>
+      <span class="letra">Está en el contrato, no en un eslogan.</span>
+    </div>
+  </div>
+</section>
+
+<!-- ============ PROCESO ============ -->
+<section class="section" id="proceso">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <span class="eyebrow">Proceso</span>
+      <h2>Del primer mensaje a la web publicada</h2>
+    </div>
+    <div class="pasos">
+      <div class="paso reveal">
+        <h3>Diagnóstico</h3>
+        <p>Quince minutos por WhatsApp o llamada. Miramos qué consultas se pierden hoy y por dónde se escapan.</p>
+      </div>
+      <div class="paso reveal">
+        <h3>Propuesta</h3>
+        <p>Alcance, precio cerrado y fecha de entrega por escrito. Sin letra chica ni costos sorpresa.</p>
+      </div>
+      <div class="paso reveal">
+        <h3>Construcción</h3>
+        <p>Avances por WhatsApp mientras el negocio sigue funcionando. Nada de reuniones eternas.</p>
+      </div>
+      <div class="paso reveal">
+        <h3>Entrega y guardia</h3>
+        <p>Web publicada, bot andando y mejoras mes a mes con el Plan Agenda.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ============ FAQ ============ -->
+<section class="section" id="faq">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <span class="eyebrow">Preguntas frecuentes</span>
+      <h2>Lo que suelen preguntar antes de escribir</h2>
+    </div>
+    <div class="faq reveal">
+      <details>
+        <summary>¿Quién hace el trabajo?</summary>
+        <p>Yo, de punta a punta. Sin agencia intermediaria ni tercerización. Por eso tomo pocos proyectos por mes: los que entran, salen bien.</p>
+      </details>
+      <details>
+        <summary>¿El bot agenda turnos solo?</summary>
+        <p>No, y es a propósito. El bot responde al instante, captura los datos y deja el turno preparado; una persona lo confirma. Un robot que agenda mal sale más caro que uno que no agenda.</p>
+      </details>
+      <details>
+        <summary>¿Y si el negocio ya tiene una web?</summary>
+        <p>Se audita lo que hay. Lo que sirve se aprovecha, lo que frena consultas se corrige. No hace falta empezar de cero para sumar el Plan Agenda.</p>
+      </details>
+      <details>
+        <summary>¿Funciona fuera de Argentina?</summary>
+        <p>Sí. Trabajo en remoto con España y Latinoamérica, con facturación internacional en regla.</p>
+      </details>
+      <details>
+        <summary>¿Cuánto cuesta?</summary>
+        <p>Cada propuesta lleva un precio cerrado según el alcance, definido después del diagnóstico. Lo que no cambia nunca: sin costos sorpresa y con fecha de entrega por escrito.</p>
+      </details>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CIERRE (noche) ============ -->
+<section class="section night cierre" id="contacto">
+  <div class="wrap">
+    <span class="eyebrow">Diagnóstico gratis</span>
+    <h2>Esta noche, cuando el negocio cierre, la web puede seguir atendiendo.</h2>
+    <p class="lead">Quince minutos, sin costo y sin compromiso: cuántas consultas llegan, cuántas se responden tarde y qué se puede recuperar.</p>
+    <a class="btn btn-primario" href="https://wa.me/5491135780065?text=Hola%2C%20quiero%20el%20diagn%C3%B3stico%20AGENDA"><svg aria-hidden="true"><use href="#ico-wa"/></svg>Pedir diagnóstico por WhatsApp</a>
+    <p class="respuesta">Respuesta en el día.</p>
+  </div>
+</section>
+
+<!-- ============ FOOTER ============ -->
+<footer>
+  <div class="wrap">
+    <div class="footer-fila">
+      <div>
+        <a class="logo" href="#">Clave<span class="ia">IA</span></a>
+        <p class="footer-desc">Webs y automatización de WhatsApp. Hecho a mano en Buenos Aires, para España y Latinoamérica.</p>
+      </div>
+      <nav class="footer-links" aria-label="Legales">
+        <a href="aviso-legal.html">Aviso legal</a>
+        <a href="privacidad.html">Política de privacidad</a>
+        <a href="cookies.html">Política de cookies</a>
+        <a href="https://www.linkedin.com/in/tiago-giribuella-a947b2308" rel="noopener">LinkedIn</a>
+        <a href="https://www.instagram.com/clave_ia_/" rel="noopener">Instagram</a>
+      </nav>
+    </div>
+    <p class="copy">© <span id="anio">2026</span> ClaveIA. Este sitio no usa cookies de seguimiento.</p>
+  </div>
+</footer>
+
+<!-- ============ AVISO DE COOKIES ============ -->
+<div class="aviso-cookies" id="avisoCookies" role="dialog" aria-label="Aviso sobre cookies">
+  <p>Este sitio no usa cookies de seguimiento ni de terceros. Solo se guarda en este dispositivo tu preferencia de cerrar este aviso. <a href="cookies.html">Más información</a>.</p>
+  <button class="btn btn-primario" id="cerrarCookies" type="button">Entendido</button>
+</div>
+
+<script>
+// Reloj en vivo: la hora real del visitante, atada a la tesis de la página
+(function(){
+  var el = document.getElementById('reloj');
+  function pintar(){
+    var h = new Date().toLocaleTimeString('es', {hour:'2-digit', minute:'2-digit'});
+    el.innerHTML = 'Son las <strong>' + h + '</strong>. ¿Quién responde los mensajes del negocio ahora?';
+  }
+  try { pintar(); setInterval(pintar, 30000); } catch(e){}
+})();
+
+// Año automático
+document.getElementById('anio').textContent = new Date().getFullYear();
+
+// Aviso de cookies: sin rastreo; solo guarda el cierre del aviso en este dispositivo.
+// (try/catch: en entornos que bloquean localStorage, el aviso simplemente vuelve a aparecer)
+(function(){
+  var aviso = document.getElementById('avisoCookies');
+  var cerrado = false;
+  try { cerrado = localStorage.getItem('claveia_aviso') === 'ok'; } catch(e){}
+  if (!cerrado) aviso.classList.add('visible');
+  document.getElementById('cerrarCookies').addEventListener('click', function(){
+    aviso.classList.remove('visible');
+    try { localStorage.setItem('claveia_aviso', 'ok'); } catch(e){}
+  });
+})();
+
+// Aparición suave de secciones al hacer scroll (se desactiva con reduced motion vía CSS)
+(function(){
+  if (!('IntersectionObserver' in window)) {
+    document.querySelectorAll('.reveal').forEach(function(n){ n.classList.add('visto'); });
+    return;
+  }
+  var io = new IntersectionObserver(function(entradas){
+    entradas.forEach(function(e){
+      if (e.isIntersecting) { e.target.classList.add('visto'); io.unobserve(e.target); }
+    });
+  }, {threshold:.15});
+  document.querySelectorAll('.reveal').forEach(function(n){ io.observe(n); });
+})();
+</script>
+</body>
+</html>
